@@ -99,7 +99,6 @@ public:
 
 	static int LoadImage_PCX(LPCTSTR path, FGXImage &image);
 	static int LoadImage_TGA(LPCTSTR path, FGXImage &image);
-	static int LoadImage_RAW(LPCTSTR path, FGXImage &image);
 	static int LoadImage_ICO(LPCTSTR path, FGXImage &image);
 	static int LoadImage_EXE(LPCTSTR path, FGXImage &image);
 

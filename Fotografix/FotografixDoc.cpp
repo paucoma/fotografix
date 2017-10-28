@@ -6,7 +6,6 @@
 
 #include "FotografixDoc.h"
 #include "NewDialog.h"
-#include "RawDialog.h"
 #include "JPEGDialog.h"
 
 #include "MainFrm.h"
@@ -182,8 +181,6 @@ BOOL CFotografixDoc::OnOpenDocument(LPCTSTR lpszPathName)
 		status = LoadImage_PCX(lpszPathName, image);
 	else if (ext == TEXT("ico") || ext == TEXT("cur"))
 		status = LoadImage_ICO(lpszPathName, image);
-	else if (ext == TEXT("raw"))
-		status = LoadImage_RAW(lpszPathName, image);
 	else
 		status = LoadImage_Default(lpszPathName, image);
 
@@ -1930,34 +1927,6 @@ int CFotografixDoc::LoadImage_EXE(LPCTSTR path, FGXImage &image) {
 	}
 
 	return Status::AccessDenied;
-}
-
-int CFotografixDoc::LoadImage_RAW(LPCTSTR path, FGXImage &image) {
-	CFile file;
-	if (file.Open(path, CFile::modeRead | CFile::shareDenyWrite) == false)
-		return Status::AccessDenied;
-
-	CRawDialog dlg;
-	dlg.length = file.GetLength();
-
-	if (dlg.DoModal() == IDOK) {
-		file.Seek(dlg.header, CFile::begin);
-
-		int n = dlg.w * dlg.h * 3;
-		BYTE *p = new BYTE[n];
-		file.Read(p, n);
-
-		FGXLayer *layer = new FGXLayer(CRect(0, 0, dlg.w, dlg.h));
-		layer->LoadFromMemory(p, 3);
-
-		image.Initialize(dlg.w, dlg.h);
-		image.AddLayer(layer);
-
-		delete p;
-
-		return Status::Ok;
-	} else
-		return Status::Aborted;
 }
 
 int CFotografixDoc::SaveImage_TGA(LPCTSTR path, const FGXImage &image) {

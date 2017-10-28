@@ -229,8 +229,7 @@ GIMP (*.xcf)|*.xcf|\
 Targa (*.tga;*.vda;*.icb;*.vst)|*.tga;*.vda;*.icb;*.vst|\
 PCX (*.pcx)|*.pcx|\
 Icons (*.ico;*.cur)|*.ico;*.cur|\
-RAW (*.raw)|*.raw|\
-All Supported Formats|*.fgx;*.psd;*.xcf;*.jpg;*.jpeg;*.jpe;*.jfif;*.bmp;*.png;*.gif;*.tif;*.tiff;*.tga;*.pcx;*.ico;*.cur;*.raw|\
+All Supported Formats|*.fgx;*.psd;*.xcf;*.jpg;*.jpeg;*.jpe;*.jfif;*.bmp;*.png;*.gif;*.tif;*.tiff;*.tga;*.pcx;*.ico;*.cur|\
 All Files (*.*)|*.*||\
 ");
 

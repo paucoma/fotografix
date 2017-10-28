@@ -331,7 +331,6 @@
     <ClCompile Include="LayerDialog.cpp" />
     <ClCompile Include="MainFrm.cpp" />
     <ClCompile Include="NewDialog.cpp" />
-    <ClCompile Include="RawDialog.cpp" />
     <ClCompile Include="RulerDialog.cpp" />
     <ClCompile Include="SizeDialog.cpp" />
     <ClCompile Include="StaticHeader.cpp" />
@@ -370,7 +369,6 @@
     <ClInclude Include="LayerDialog.h" />
     <ClInclude Include="MainFrm.h" />
     <ClInclude Include="NewDialog.h" />
-    <ClInclude Include="RawDialog.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="RulerDialog.h" />
     <ClInclude Include="SizeDialog.h" />

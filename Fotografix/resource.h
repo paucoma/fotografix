@@ -35,7 +35,6 @@
 #define IDI_ADJUST                      155
 #define IDI_LAYER                       156
 #define IDI_TEXT                        157
-#define IDD_RAWIMPORT                   160
 #define IDR_SCRIPTS                     161
 #define IDI_FILE                        164
 #define IDI_FOLDER                      165
@@ -48,7 +47,6 @@
 #define IDC_W1                          1000
 #define IDC_H1                          1001
 #define IDC_W2                          1002
-#define IDC_HEADER                      1002
 #define IDC_H2                          1003
 #define IDC_FILL                        1004
 #define IDC_RES                         1005
@@ -92,9 +90,6 @@
 #define IDC_CHOOSE                      1034
 #define IDC_TEXT                        1035
 #define IDC_COLOR                       1036
-#define IDC_SIZE                        1038
-#define IDC_W                           1039
-#define IDC_H                           1040
 #define IDC_MODE                        1041
 #define IDC_SCRIPTS                     1042
 #define IDC_FEEDBACK                    1044
@@ -237,7 +232,7 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        180
+#define _APS_NEXT_RESOURCE_VALUE        181
 #define _APS_NEXT_COMMAND_VALUE         32987
 #define _APS_NEXT_CONTROL_VALUE         1055
 #define _APS_NEXT_SYMED_VALUE           101
