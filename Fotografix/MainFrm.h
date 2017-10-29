@@ -34,7 +34,6 @@ public:
 protected:  // control bar embedded members
 	CFont		m_font;
 	CStatusBar  m_wndStatusBar;
-	CToolBar    m_wndToolBar;
 	CToolBar	m_wndToolsBar;
 	CDialogBar	m_wndColor;
 	CDialogBar	m_wndSelection;

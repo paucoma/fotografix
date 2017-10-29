@@ -87,8 +87,6 @@ IDI_SIZE                ICON                    "res\\size.ico"
 // Bitmap
 //
 
-IDR_MAINFRAME           BITMAP                  "res\\Toolbar.bmp"
-
 IDB_COLOR2              BITMAP                  "res\\color2.bmp"
 
 IDB_COLOR1              BITMAP                  "res\\color1.bmp"
@@ -100,19 +98,6 @@ IDR_TOOLS               BITMAP                  "res\\tools.bmp"
 //
 // Toolbar
 //
-
-IDR_MAINFRAME TOOLBAR 16, 15
-BEGIN
-    BUTTON      ID_FILE_NEW
-    BUTTON      ID_FILE_OPEN
-    BUTTON      ID_FILE_SAVE
-    SEPARATOR
-    BUTTON      ID_EDIT_CUT
-    BUTTON      ID_EDIT_COPY
-    BUTTON      ID_EDIT_PASTE
-    SEPARATOR
-    BUTTON      ID_FILE_PRINT
-END
 
 IDR_TOOLS TOOLBAR 20, 20
 BEGIN

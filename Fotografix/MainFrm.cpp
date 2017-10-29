@@ -16,18 +16,6 @@ const int firstTool = ID_TOOL_RSELECT,
 
 HCURSOR toolCursor[16];
 
-LPCTSTR toolBtnName[9] = {
-	TEXT("New"),
-	TEXT("Open"),
-	TEXT("Save"),
-	NULL,
-	TEXT("Cut"),
-	TEXT("Copy"),
-	TEXT("Paste"),
-	NULL,
-	TEXT("Print")
-};
-
 LPCTSTR toolName[15] = {
 	TEXT("RSelect"),
 	TEXT("ESelect"),
@@ -219,22 +207,6 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		toolMessage[i].Format(TEXT("%s: %s"), GetLangItem(toolName[i]), GetLangItem(helpName));
 	}
 
-	if (!m_wndToolBar.CreateEx(this, TBSTYLE_LIST, WS_CHILD | WS_VISIBLE | /*CBRS_GRIPPER | */CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_ALIGN_TOP) ||
-		!m_wndToolBar.LoadToolBar(IDR_MAINFRAME))
-	{
-		TRACE0("Failed to create toolbar\n");
-		return -1;      // fail to create
-	}
-	for (int i = 0; i < 9; i++) {
-		UINT id, style;
-		int image;
-		m_wndToolBar.GetButtonInfo(i, id, style, image);
-		m_wndToolBar.SetButtonStyle(i, style | BTNS_AUTOSIZE);
-
-		if (toolBtnName[i] != NULL)
-			m_wndToolBar.SetButtonText(i, GetMenuItem(toolBtnName[i]));
-	}
-
 	// Tools bar
 
 	if (!m_wndToolsBar.CreateEx(this, TBSTYLE_FLAT, WS_CHILD | WS_VISIBLE | CBRS_GRIPPER | CBRS_SIZE_FIXED | CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_ALIGN_LEFT) ||
@@ -396,9 +368,6 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	bar.SetIcon(1, (HICON)::LoadImage(app->m_hInstance, MAKEINTRESOURCE(IDI_LAYER), IMAGE_ICON, 16, 16, LR_SHARED));
 	bar.SetIcon(2, (HICON)::LoadImage(app->m_hInstance, MAKEINTRESOURCE(IDI_SIZE), IMAGE_ICON, 16, 16, LR_SHARED));
 	bar.SetIcon(3, (HICON)::LoadImage(app->m_hInstance, MAKEINTRESOURCE(IDI_ZOOM), IMAGE_ICON, 16, 16, LR_SHARED));
-
-	m_wndToolBar.SetBarStyle(m_wndToolBar.GetBarStyle() |
-		CBRS_TOOLTIPS | CBRS_FLYBY);
 
 	EnableDocking(CBRS_ALIGN_ANY);
 
