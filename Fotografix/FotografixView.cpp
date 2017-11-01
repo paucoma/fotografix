@@ -1947,8 +1947,7 @@ Bitmap (*.bmp)|*.bmp|\
 PNG (*.png)|*.png|\
 GIF (*.gif)|*.gif|\
 TIFF (*.tif)|*.tif|\
-Targa (*.tga)|*.tga|\
-RAW (*.raw)|*.raw||\
+Targa (*.tga)|*.tga||\
 ");
 
 	LPCTSTR ext[] = {
@@ -1958,8 +1957,7 @@ RAW (*.raw)|*.raw||\
 		TEXT(".png"),
 		TEXT(".gif"),
 		TEXT(".tif"),
-		TEXT(".tga"),
-		TEXT(".raw")
+		TEXT(".tga")
 	};
 
 	CFileDialog dlg(false, NULL, NULL, OFN_OVERWRITEPROMPT, filter, this);
@@ -1975,20 +1973,15 @@ RAW (*.raw)|*.raw||\
 		LPCTSTR exp = ext[dlg.m_ofn.nFilterIndex - 1];
 		if (path.Right(4).MakeLower() != exp) path += exp;
 
-		// RAW save doesn't count
-		if (dlg.m_ofn.nFilterIndex == 8)
-			pDoc->OnSaveDocument(path);
-		else {
-			if (pDoc->IsModified())
-				pDoc->dirty = true;
+		if (pDoc->IsModified())
+			pDoc->dirty = true;
 
-			pDoc->image.Compact();
+		pDoc->image.Compact();
 
-			if (pDoc->DoSave(path) == true) {
-				pDoc->SetPathName(path);
-				pDoc->hasPath = true;
-				pDoc->SetModifiedFlag(false);
-			}
+		if (pDoc->DoSave(path) == true) {
+			pDoc->SetPathName(path);
+			pDoc->hasPath = true;
+			pDoc->SetModifiedFlag(false);
 		}
 	}
 }

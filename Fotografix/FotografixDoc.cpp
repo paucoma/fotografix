@@ -396,8 +396,6 @@ BOOL CFotografixDoc::OnSaveDocument(LPCTSTR lpszPathName)
 		status = SaveImage_FGX(lpszPathName, image);
 	else if (ext == TEXT("tga"))
 		status = SaveImage_TGA(lpszPathName, image);
-	else if (ext == TEXT("raw"))
-		status = SaveImage_RAW(lpszPathName, image);
 
 	switch (status) {
 	case Status::Ok:
@@ -1958,29 +1956,6 @@ int CFotografixDoc::SaveImage_TGA(LPCTSTR path, const FGXImage &image) {
 	DWORD *p = new DWORD[n];
 	layer.SaveToMemory(p, 4);
 	file.Write(p, n*4);
-	delete p;
-
-	file.Close();
-
-	return Status::Ok;
-}
-
-int CFotografixDoc::SaveImage_RAW(LPCTSTR path, const FGXImage &image) {
-	CFile file;
-	if (file.Open(path, CFile::modeCreate | CFile::modeWrite) == false)
-		return Status::AccessDenied;
-
-	// Write pixel data
-
-	CRect rect = CRect(0, 0, image.GetWidth(), image.GetHeight());
-	FGXLayer layer(rect);
-	layer.Fill(FGXColor(globals.bgColor.GetColor(), 255));
-	image.Render(layer, rect, false);
-
-	int n = rect.Width() * rect.Height() * 3;
-	BYTE *p = new BYTE[n];
-	layer.SaveToMemory(p, 3);
-	file.Write(p, n);
 	delete p;
 
 	file.Close();

@@ -103,7 +103,6 @@ public:
 	static int LoadImage_EXE(LPCTSTR path, FGXImage &image);
 
 	static int SaveImage_TGA(LPCTSTR path, const FGXImage &image);
-	static int SaveImage_RAW(LPCTSTR path, const FGXImage &image);
 
 	static int LoadImage_FGX(LPCTSTR path, FGXImage &image);
 	static void FGX_WriteBlockHeader(CFile &file, LONG Signature, LONG BlockSize);
