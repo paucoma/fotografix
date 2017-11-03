@@ -223,4 +223,6 @@ public:
 private:
 	vector<FGXUndo *> undo;
 	int undoPos;
+public:
+    afx_msg void OnFileExport();
 };

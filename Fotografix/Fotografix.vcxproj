@@ -332,6 +332,7 @@
     <ClCompile Include="MainFrm.cpp" />
     <ClCompile Include="NewDialog.cpp" />
     <ClCompile Include="RulerDialog.cpp" />
+    <ClCompile Include="ExportDialog.cpp" />
     <ClCompile Include="SizeDialog.cpp" />
     <ClCompile Include="StaticHeader.cpp" />
     <ClCompile Include="stdafx.cpp">
@@ -371,6 +372,7 @@
     <ClInclude Include="NewDialog.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="RulerDialog.h" />
+    <ClInclude Include="ExportDialog.h" />
     <ClInclude Include="SizeDialog.h" />
     <ClInclude Include="StaticHeader.h" />
     <ClInclude Include="stdafx.h" />

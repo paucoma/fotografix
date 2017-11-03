@@ -85,3 +85,6 @@ using Gdiplus::ARGB;
 
 using Gdiplus::Font;
 using Gdiplus::FontStyle;
+
+#include <string>
+#include <vector>

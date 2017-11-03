@@ -7,6 +7,7 @@
 #include "FotografixDoc.h"
 #include "NewDialog.h"
 #include "JPEGDialog.h"
+#include "ExportDialog.h"
 
 #include "MainFrm.h"
 #include "FotografixView.h"
@@ -24,6 +25,7 @@ bool CFotografixDoc::first = true;
 IMPLEMENT_DYNCREATE(CFotografixDoc, CDocument)
 
 BEGIN_MESSAGE_MAP(CFotografixDoc, CDocument)
+    ON_COMMAND(ID_FILE_EXPORT, &CFotografixDoc::OnFileExport)
 END_MESSAGE_MAP()
 
 
@@ -2226,4 +2228,24 @@ BOOL CFotografixDoc::SaveModified()
 		return false;
 
 	return true;
+}
+
+
+void CFotografixDoc::OnFileExport()
+{
+    using fgx::FileType;
+
+    std::vector<FileType> fileTypes;
+    fileTypes.push_back(FileType{ L"bmp", L"Bitmap" });
+    fileTypes.push_back(FileType{ L"gif", L"GIF" });
+    fileTypes.push_back(FileType{ L"jpg", L"JPEG" });
+    fileTypes.push_back(FileType{ L"png", L"PNG" });
+    fileTypes.push_back(FileType{ L"tga", L"Targa" });
+    fileTypes.push_back(FileType{ L"tif", L"TIFF" });
+
+    fgx::ExportDialog dlg{ &fileTypes };
+    
+    if (dlg.Show()) {
+        OnSaveDocument(dlg.GetFileName().c_str());
+    }
 }

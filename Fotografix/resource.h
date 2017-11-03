@@ -13,6 +13,7 @@
 #define IDB_COLOR2                      132
 #define ID_INDICATOR_CHANNEL            133
 #define IDB_COLOR1                      133
+#define IDS_FILE_EXPORT                 133
 #define IDD_CANVASSIZE                  134
 #define IDR_SELECT                      135
 #define IDR_TOOLS                       136
@@ -227,13 +228,14 @@
 #define ID_PRESET_WINDOWSCLIPBOARD      32942
 #define ID_PRESET_WINDOWS               32943
 #define ID_APP_LANGUAGE                 32983
+#define ID_FILE_EXPORT                  32987
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        181
-#define _APS_NEXT_COMMAND_VALUE         32987
+#define _APS_NEXT_COMMAND_VALUE         32988
 #define _APS_NEXT_CONTROL_VALUE         1055
 #define _APS_NEXT_SYMED_VALUE           101
 #endif

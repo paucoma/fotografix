@@ -169,6 +169,7 @@ BEGIN
         MENUITEM SEPARATOR
         MENUITEM "&Save\tCtrl+S",               ID_FILE_SAVE
         MENUITEM "Save&As...\tCtrl+Shift+S",    ID_FILE_SAVE_AS
+        MENUITEM "&Export...",                  ID_FILE_EXPORT
         MENUITEM SEPARATOR
         MENUITEM "&Close\tCtrl+W",              ID_FILE_CLOSE
         MENUITEM SEPARATOR
@@ -1072,6 +1073,7 @@ BEGIN
     ID_INDICATOR_ZOOM       "ZZ9999.99%"
     ID_INDICATOR_SIZE       "ZZ9999 x 9999 pixels (9999 ppi)"
     ID_INDICATOR_LAYER      "ZZ1234567890123456 (Green-Green)"
+    IDS_FILE_EXPORT         "Export"
 END
 
 STRINGTABLE
