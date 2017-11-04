@@ -23,7 +23,6 @@ BEGIN_MESSAGE_MAP(CFotografixApp, CWinApp)
 	// Standard file based document commands
 	ON_COMMAND(ID_FILE_NEW, &CWinApp::OnFileNew)
 	ON_COMMAND(ID_FILE_OPEN, &CFotografixApp::OnFileOpen)
-	ON_COMMAND(ID_FILE_EXTRACT, &CFotografixApp::OnFileExtract)
 	// Standard print setup command
 	ON_COMMAND(ID_FILE_PRINT_SETUP, &CWinApp::OnFilePrintSetup)
 	ON_COMMAND(ID_APP_LANGUAGE, &CFotografixApp::OnAppLanguage)
@@ -69,7 +68,6 @@ BOOL CFotografixApp::InitInstance()
 	::GetModuleFileName(NULL, globals.appPath.GetBuffer(MAX_PATH), MAX_PATH);
 	globals.appPath.ReleaseBuffer();
 	globals.appPath = globals.appPath.Left(globals.appPath.ReverseFind('\\'));
-	globals.openExtract = false;
 
 	FGXScript::Initialize();
 
@@ -255,31 +253,6 @@ All Files (*.*)|*.*||\
 			CFotografixDoc *pDoc = static_cast<CFotografixDoc *>(OpenDocumentFile(dlg.GetNextPathName(pos)));
 			if (readOnly == true) pDoc->hasPath = false;
 		}
-	}
-}
-
-void CFotografixApp::OnFileExtract()
-{
-	CFileDialog dlg(true, NULL, NULL, OFN_HIDEREADONLY | OFN_ALLOWMULTISELECT | OFN_FILEMUSTEXIST, TEXT("All Files (*.*)|*.*||"), GetMainWnd());
-
-#ifndef _DEBUG
-	// Remove MFC hook to enable new Vista dialog
-	dlg.m_ofn.Flags &= ~OFN_ENABLEHOOK;
-#endif
-
-	TCHAR buffer[4096];
-	buffer[0] = 0;
-	dlg.m_ofn.lpstrFile = buffer;
-	dlg.m_ofn.nMaxFile = 4096;
-
-	if (dlg.DoModal() == IDOK) {
-		globals.openExtract = true;
-
-		POSITION pos = dlg.GetStartPosition();
-		while (pos)
-			OpenDocumentFile(dlg.GetNextPathName(pos));
-
-		globals.openExtract = false;
 	}
 }
 

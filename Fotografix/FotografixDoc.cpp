@@ -165,9 +165,7 @@ BOOL CFotografixDoc::OnOpenDocument(LPCTSTR lpszPathName)
 
 	int status;
 
-	if (globals.openExtract == true)
-		status = LoadImage_EXE(lpszPathName, image);
-	else if (ext == TEXT("jpg") || ext == TEXT("jpeg") || ext == TEXT("jpe") || ext == TEXT("jfif"))
+	if (ext == TEXT("jpg") || ext == TEXT("jpeg") || ext == TEXT("jpe") || ext == TEXT("jfif"))
 		status = LoadImage_Default(lpszPathName, image), hasPath = true;
 	else if (ext == TEXT("bmp"))
 		status = LoadImage_Default(lpszPathName, image), hasPath = true;
@@ -1921,18 +1919,6 @@ int CFotografixDoc::LoadImage_ICO(LPCTSTR path, FGXImage &image) {
 	}
 
 	return Status::UnknownImageFormat;
-}
-
-int CFotografixDoc::LoadImage_EXE(LPCTSTR path, FGXImage &image) {
-	SHFILEINFO shfi;
-
-	if (::SHGetFileInfo(path, 0, &shfi, sizeof(shfi), SHGFI_ICON | SHGFI_LARGEICON)) {
-		bool result = LoadImage_Icon(shfi.hIcon, image);
-		::DestroyIcon(shfi.hIcon);
-		return result;
-	}
-
-	return Status::AccessDenied;
 }
 
 int CFotografixDoc::SaveImage_TGA(LPCTSTR path, const FGXImage &image) {

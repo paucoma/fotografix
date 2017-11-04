@@ -200,7 +200,6 @@
 #define ID_FLIP_VERTICAL                32862
 #define ID_LAYER_MOVEUP                 32863
 #define ID_LAYER_MOVEDOWN               32864
-#define ID_FILE_EXTRACT                 32873
 #define ID_SELECT_LAYERTRANSPARENCY     32874
 #define ID_LAYER_RASTERIZE              32879
 #define ID_MODIFY_EXPAND                32885

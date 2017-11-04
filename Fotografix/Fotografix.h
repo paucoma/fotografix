@@ -40,7 +40,6 @@ private:
 
 struct Globals {
 	CString appPath;
-	bool openExtract;
 
 	int curTool;
 	HCURSOR curCursor;

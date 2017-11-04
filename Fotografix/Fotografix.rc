@@ -130,7 +130,6 @@ BEGIN
     BEGIN
         MENUITEM "&New...\tCtrl+N",             ID_FILE_NEW
         MENUITEM "&Open...\tCtrl+O",            ID_FILE_OPEN
-        MENUITEM "Ex&tractIcon...",             ID_FILE_EXTRACT
         MENUITEM SEPARATOR
         MENUITEM "PageSet&up...\tCtrl+Shift+P", ID_FILE_PRINT_SETUP
         MENUITEM SEPARATOR
@@ -165,7 +164,6 @@ BEGIN
     BEGIN
         MENUITEM "&New...\tCtrl+N",             ID_FILE_NEW
         MENUITEM "&Open...\tCtrl+O",            ID_FILE_OPEN
-        MENUITEM "Ex&tractIcon...",             ID_FILE_EXTRACT
         MENUITEM SEPARATOR
         MENUITEM "&Save\tCtrl+S",               ID_FILE_SAVE
         MENUITEM "Save&As...\tCtrl+Shift+S",    ID_FILE_SAVE_AS
