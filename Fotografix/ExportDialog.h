@@ -1,26 +1,28 @@
 #pragma once
 
+#include "Export.h"
+
 namespace fgx {
 
-struct FileType
-{
-    std::wstring extension;
-    std::wstring name;
-};
-
+// Encapsulates the File Export dialog.
 class ExportDialog : private CFileDialog
 {
 public:
-    ExportDialog(const std::vector<FileType>* fileTypes);
+    ExportDialog();
     virtual ~ExportDialog();
 
+    // Displays the dialog; returns false if the operation was cancelled.
     bool Show();
 
     std::wstring GetFileName() const;
-    const FileType& GetFileType() const;
+    const ExportFormat& GetExportFormat() const;
+    ExportOptions GetExportOptions() const;
 
 private:
-    const std::vector<FileType>* fileTypes_;
+    void OnTypeChange();
+
+private:
+    const std::vector<ExportFormat>& formats_;
     IFileSaveDialog* comDialog_;
 };
 

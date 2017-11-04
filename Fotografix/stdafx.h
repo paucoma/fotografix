@@ -88,3 +88,4 @@ using Gdiplus::FontStyle;
 
 #include <string>
 #include <vector>
+#include <memory>

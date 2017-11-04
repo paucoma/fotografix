@@ -1074,6 +1074,12 @@ BEGIN
     ID_INDICATOR_SIZE       "ZZ9999 x 9999 pixels (9999 ppi)"
     ID_INDICATOR_LAYER      "ZZ1234567890123456 (Green-Green)"
     IDS_FILE_EXPORT         "Export"
+    IDS_SAVE_ERROR          "Can't save ""%1"""
+    IDS_UNSUPPORTED_FORMAT  "The selected image format is not supported on this system."
+    IDS_EXPORT_QUALITY_LABEL "Quality:"
+    IDS_EXPORT_QUALITY_LOW  "Low"
+    IDS_EXPORT_QUALITY_MEDIUM "Medium"
+    IDS_EXPORT_QUALITY_HIGH "High"
 END
 
 STRINGTABLE

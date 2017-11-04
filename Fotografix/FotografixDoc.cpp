@@ -4,9 +4,12 @@
 #include "stdafx.h"
 #include "Fotografix.h"
 
+#include <afxtaskdialog.h>
+
 #include "FotografixDoc.h"
 #include "NewDialog.h"
 #include "JPEGDialog.h"
+#include "Export.h"
 #include "ExportDialog.h"
 
 #include "MainFrm.h"
@@ -17,6 +20,9 @@
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
+
+using fgx::ExportResult;
+static void HandleExportError(const std::wstring& fileName, ExportResult exportResult);
 
 // CFotografixDoc
 
@@ -2230,22 +2236,46 @@ BOOL CFotografixDoc::SaveModified()
 	return true;
 }
 
-
 void CFotografixDoc::OnFileExport()
 {
-    using fgx::FileType;
-
-    std::vector<FileType> fileTypes;
-    fileTypes.push_back(FileType{ L"bmp", L"Bitmap" });
-    fileTypes.push_back(FileType{ L"gif", L"GIF" });
-    fileTypes.push_back(FileType{ L"jpg", L"JPEG" });
-    fileTypes.push_back(FileType{ L"png", L"PNG" });
-    fileTypes.push_back(FileType{ L"tga", L"Targa" });
-    fileTypes.push_back(FileType{ L"tif", L"TIFF" });
-
-    fgx::ExportDialog dlg{ &fileTypes };
+    fgx::ExportDialog dlg;
     
     if (dlg.Show()) {
-        OnSaveDocument(dlg.GetFileName().c_str());
+        std::wstring fileName = dlg.GetFileName();
+
+        fgx::ExportOptions options = dlg.GetExportOptions();
+        options.backgroundColor = globals.bgColor.GetColor();
+
+        ExportResult result = fgx::ExportImage(image, fileName, dlg.GetExportFormat(), options);
+
+        if (result != ExportResult::Success) {
+            HandleExportError(fileName, result);
+        }
     }
+}
+
+void HandleExportError(const std::wstring& fileName, fgx::ExportResult exportResult)
+{
+    CString title;
+    title.LoadString(IDS_FILE_EXPORT);
+
+    CString mainInstruction;
+    mainInstruction.FormatMessage(IDS_SAVE_ERROR, fileName.c_str());
+
+    CString content;
+
+    switch (exportResult) {
+        case ExportResult::UnsupportedFormat:
+            content.LoadString(IDS_UNSUPPORTED_FORMAT);
+            break;
+
+        case ExportResult::Win32Error:
+            FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM, nullptr, GetLastError(), 0, content.GetBufferSetLength(256), 256, nullptr);
+            content.ReleaseBuffer();
+            break;
+    }
+
+    CTaskDialog errorDialog{ content, mainInstruction, title, TDCBF_CLOSE_BUTTON, TDF_USE_HICON_MAIN };
+    errorDialog.SetMainIcon(MAKEINTRESOURCE(TD_ERROR_ICON));
+    errorDialog.DoModal();
 }

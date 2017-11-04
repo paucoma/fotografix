@@ -6,27 +6,51 @@
 
 namespace fgx {
 
-static std::wstring GenerateFilterString(const std::vector<FileType>& fileTypes)
+static const int QUALITY_GROUP = 1;
+static const int QUALITY_COMBO_BOX = 2;
+static const int QUALITY_LOW = 3;
+static const int QUALITY_MEDIUM = 4;
+static const int QUALITY_HIGH = 5;
+
+static std::wstring GenerateFilterString(const std::vector<ExportFormat>& formats)
 {
     std::wostringstream filter;
 
-    for (auto& type : fileTypes) {
-        filter << type.name << L" (*." << type.extension << L")|*." << type.extension << L"|";
+    for (auto& format : formats) {
+        filter << format.name << L" (*." << format.extension << L")|*." << format.extension << L"|";
     }
 
     filter << L"|";
     return filter.str();
 }
 
-ExportDialog::ExportDialog(const std::vector<FileType>* fileTypes)
-    : CFileDialog{ false, nullptr, nullptr, OFN_OVERWRITEPROMPT, GenerateFilterString(*fileTypes).c_str() },
-    fileTypes_{ fileTypes }
+static CString LoadCString(int id)
 {
+    CString str;
+    str.LoadString(id);
+    return str;
+}
+
+ExportDialog::ExportDialog()
+    : CFileDialog{ false, nullptr, nullptr, OFN_OVERWRITEPROMPT, GenerateFilterString(GetExportFormats()).c_str() },
+    formats_{ GetExportFormats() }
+{
+    ApplyOFNToShellDialog();
     comDialog_ = GetIFileSaveDialog();
 
-    CString title;
-    title.LoadString(IDS_FILE_EXPORT);
+    CString title = LoadCString(IDS_FILE_EXPORT);
     comDialog_->SetTitle(title);
+    comDialog_->SetOkButtonLabel(title);
+
+    StartVisualGroup(QUALITY_GROUP, LoadCString(IDS_EXPORT_QUALITY_LABEL));
+    AddComboBox(QUALITY_COMBO_BOX);
+    AddControlItem(QUALITY_COMBO_BOX, QUALITY_LOW, LoadCString(IDS_EXPORT_QUALITY_LOW));
+    AddControlItem(QUALITY_COMBO_BOX, QUALITY_MEDIUM, LoadCString(IDS_EXPORT_QUALITY_MEDIUM));
+    AddControlItem(QUALITY_COMBO_BOX, QUALITY_HIGH, LoadCString(IDS_EXPORT_QUALITY_HIGH));
+    EndVisualGroup();
+
+    SetSelectedControlItem(QUALITY_COMBO_BOX, QUALITY_MEDIUM);
+    OnTypeChange();
 }
 
 ExportDialog::~ExportDialog()
@@ -44,7 +68,7 @@ std::wstring ExportDialog::GetFileName() const
     CString path = GetPathName();
     CString ext = GetFileExt();
 
-    std::wstring expectedExt = GetFileType().extension;
+    std::wstring expectedExt = GetExportFormat().extension;
 
     if (ext != expectedExt.c_str()) {
         path += L".";
@@ -54,11 +78,34 @@ std::wstring ExportDialog::GetFileName() const
     return path;
 }
 
-const FileType& ExportDialog::GetFileType() const
+const ExportFormat& ExportDialog::GetExportFormat() const
 {
     UINT i = 1;
     comDialog_->GetFileTypeIndex(&i);
-    return fileTypes_->at(i - 1);
+    return formats_[i - 1];
+}
+
+ExportOptions ExportDialog::GetExportOptions() const
+{
+    DWORD selectedQuality;
+    const_cast<ExportDialog*>(this)->GetSelectedControlItem(QUALITY_COMBO_BOX, selectedQuality);
+
+    ExportOptions options;
+
+    switch (selectedQuality) {
+        case QUALITY_LOW: options.quality = 25; break;
+        case QUALITY_MEDIUM: options.quality = 75; break;
+        case QUALITY_HIGH: options.quality = 100; break;
+    }
+
+    return options;
+}
+
+void ExportDialog::OnTypeChange()
+{
+    CDCONTROLSTATEF state = GetExportFormat().supportsQuality ? CDCS_ENABLEDVISIBLE : CDCS_INACTIVE;
+    SetControlState(QUALITY_GROUP, state);
+    SetControlState(QUALITY_COMBO_BOX, state);
 }
 
 }

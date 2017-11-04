@@ -314,6 +314,7 @@
     <ClCompile Include="ChildFrm.cpp" />
     <ClCompile Include="ColorPicker.cpp" />
     <ClCompile Include="DragListCtrl.cpp" />
+    <ClCompile Include="Export.cpp" />
     <ClCompile Include="FGXBitmap.cpp" />
     <ClCompile Include="FGXChannel.cpp" />
     <ClCompile Include="FGXGradient.cpp" />
@@ -325,6 +326,7 @@
     <ClCompile Include="Fotografix.cpp" />
     <ClCompile Include="FotografixDoc.cpp" />
     <ClCompile Include="FotografixView.cpp" />
+    <ClCompile Include="GdiplusEncoderList.cpp" />
     <ClCompile Include="InputDialog.cpp" />
     <ClCompile Include="JPEGDialog.cpp" />
     <ClCompile Include="Language.cpp" />
@@ -352,6 +354,7 @@
     <ClInclude Include="ChildFrm.h" />
     <ClInclude Include="ColorPicker.h" />
     <ClInclude Include="DragListCtrl.h" />
+    <ClInclude Include="Export.h" />
     <ClInclude Include="FGX.h" />
     <ClInclude Include="FGXBitmap.h" />
     <ClInclude Include="FGXChannel.h" />
@@ -364,6 +367,7 @@
     <ClInclude Include="Fotografix.h" />
     <ClInclude Include="FotografixDoc.h" />
     <ClInclude Include="FotografixView.h" />
+    <ClInclude Include="GdiplusEncoderList.h" />
     <ClInclude Include="InputDialog.h" />
     <ClInclude Include="JPEGDialog.h" />
     <ClInclude Include="Language.h" />

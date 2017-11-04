@@ -15,11 +15,17 @@
 #define IDB_COLOR1                      133
 #define IDS_FILE_EXPORT                 133
 #define IDD_CANVASSIZE                  134
+#define IDS_SAVE_ERROR                  134
 #define IDR_SELECT                      135
+#define IDS_UNSUPPORTED_FORMAT          135
 #define IDR_TOOLS                       136
 #define IDR_WAND                        136
+#define IDS_EXPORT_QUALITY_LABEL        136
+#define IDS_EXPORT_QUALITY_LOW          137
 #define IDC_HAND2                       138
+#define IDS_EXPORT_QUALITY_MEDIUM       138
 #define IDC_CROSS2                      139
+#define IDS_EXPORT_QUALITY_HIGH         139
 #define IDC_DROPPER                     140
 #define IDC_MOVE                        141
 #define IDD_ADJUST                      142
@@ -235,7 +241,7 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        181
-#define _APS_NEXT_COMMAND_VALUE         32988
+#define _APS_NEXT_COMMAND_VALUE         32990
 #define _APS_NEXT_CONTROL_VALUE         1055
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
