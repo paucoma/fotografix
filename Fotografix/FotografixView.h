@@ -44,11 +44,6 @@ public:
 	afx_msg void OnTimer(UINT_PTR nIDEvent);
 	afx_msg LRESULT OnApp(WPARAM wParam, LPARAM lParam);
 
-	// File menu
-
-	afx_msg void OnFileSave();
-	afx_msg void OnFileSaveAs();
-
 	// Edit menu
 
 	afx_msg void OnEditUndo();

@@ -27,10 +27,14 @@
 #define IDC_CROSS2                      139
 #define IDS_EXPORT_QUALITY_HIGH         139
 #define IDC_DROPPER                     140
+#define IDS_FILE_SAVE                   140
 #define IDC_MOVE                        141
+#define IDS_SAVE_CONFIRMATION           141
 #define IDD_ADJUST                      142
+#define IDS_SAVE                        142
 #define IDR_LAYERS                      143
 #define IDR_POPUP                       143
+#define IDS_DONT_SAVE                   143
 #define IDR_BRUSH                       144
 #define IDR_DUMMY                       145
 #define IDD_INPUT                       146
@@ -49,7 +53,6 @@
 #define IDC_ZOOM                        169
 #define IDI_ZOOM                        176
 #define IDI_SIZE                        177
-#define IDD_JPEG_OPTIONS                178
 #define IDD_RULER                       179
 #define IDC_W1                          1000
 #define IDC_H1                          1001

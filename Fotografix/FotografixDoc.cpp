@@ -8,7 +8,6 @@
 
 #include "FotografixDoc.h"
 #include "NewDialog.h"
-#include "JPEGDialog.h"
 #include "Export.h"
 #include "ExportDialog.h"
 
@@ -22,7 +21,7 @@
 #endif
 
 using fgx::ExportResult;
-static void HandleExportError(const std::wstring& fileName, ExportResult exportResult);
+static void HandleSaveError(int titleMessageId, const std::wstring& fileName, ExportResult exportResult);
 
 // CFotografixDoc
 
@@ -31,6 +30,8 @@ bool CFotografixDoc::first = true;
 IMPLEMENT_DYNCREATE(CFotografixDoc, CDocument)
 
 BEGIN_MESSAGE_MAP(CFotografixDoc, CDocument)
+    ON_COMMAND(ID_FILE_SAVE, &CFotografixDoc::OnFileSave)
+    ON_COMMAND(ID_FILE_SAVE_AS, &CFotografixDoc::OnFileSaveAs)
     ON_COMMAND(ID_FILE_EXPORT, &CFotografixDoc::OnFileExport)
 END_MESSAGE_MAP()
 
@@ -48,9 +49,6 @@ CFotografixDoc::CFotografixDoc()
 	tTracker.m_nHandleSize = 6;
 	tTracker.m_nStyle = CRectTracker::hatchedBorder | CRectTracker::resizeOutside;
 	tTracker.m_sizeMin = CSize(1, 1);
-
-	hasPath = false;
-	dirty = false;
 }
 
 CFotografixDoc::~CFotografixDoc()
@@ -166,23 +164,23 @@ BOOL CFotografixDoc::OnOpenDocument(LPCTSTR lpszPathName)
 	int status;
 
 	if (ext == TEXT("jpg") || ext == TEXT("jpeg") || ext == TEXT("jpe") || ext == TEXT("jfif"))
-		status = LoadImage_Default(lpszPathName, image), hasPath = true;
+		status = LoadImage_Default(lpszPathName, image);
 	else if (ext == TEXT("bmp"))
-		status = LoadImage_Default(lpszPathName, image), hasPath = true;
+		status = LoadImage_Default(lpszPathName, image);
 	else if (ext == TEXT("png"))
-		status = LoadImage_Default(lpszPathName, image), hasPath = true;
+		status = LoadImage_Default(lpszPathName, image);
 	else if (ext == TEXT("gif"))
-		status = LoadImage_Default(lpszPathName, image), hasPath = true;
+		status = LoadImage_Default(lpszPathName, image);
 	else if (ext == TEXT("tif") || ext == TEXT("tiff"))
-		status = LoadImage_Default(lpszPathName, image), hasPath = true;
+		status = LoadImage_Default(lpszPathName, image);
 	else if (ext == TEXT("fgx"))
-		status = LoadImage_FGX(lpszPathName, image), hasPath = true;
+		status = LoadImage_FGX(lpszPathName, image);
 	else if (ext == TEXT("psd"))
 		status = LoadImage_PSD(lpszPathName, image);
 	else if (ext == TEXT("xcf"))
 		status = LoadImage_XCF(lpszPathName, image);
 	else if (ext == TEXT("tga"))
-		status = LoadImage_TGA(lpszPathName, image), hasPath = true;
+		status = LoadImage_TGA(lpszPathName, image);
 	else if (ext == TEXT("pcx"))
 		status = LoadImage_PCX(lpszPathName, image);
 	else if (ext == TEXT("ico") || ext == TEXT("cur"))
@@ -219,201 +217,17 @@ BOOL CFotografixDoc::OnOpenDocument(LPCTSTR lpszPathName)
 	}
 }
 
-// MSDN: Helper function to retrieve CLSID for given format
-int GetEncoderClsid(const WCHAR* format, CLSID* pClsid)
-{
-   UINT  num = 0;          // number of image encoders
-   UINT  size = 0;         // size of the image encoder array in bytes
-
-   Gdiplus::ImageCodecInfo* pImageCodecInfo = NULL;
-
-   Gdiplus::GetImageEncodersSize(&num, &size);
-   if(size == 0)
-
-      return -1;  // Failure
-
-   pImageCodecInfo = (Gdiplus::ImageCodecInfo*)(malloc(size));
-   if(pImageCodecInfo == NULL)
-      return -1;  // Failure
-
-   Gdiplus::GetImageEncoders(num, size, pImageCodecInfo);
-
-   for(UINT j = 0; j < num; ++j)
-   {
-      if( wcscmp(pImageCodecInfo[j].MimeType, format) == 0 )
-      {
-         *pClsid = pImageCodecInfo[j].Clsid;
-         free(pImageCodecInfo);
-         return j;  // Success
-      }    
-   }
-
-   free(pImageCodecInfo);
-   return -1;  // Failure
-}
-
-enum {
-	EncoderJPEG,
-	EncoderBMP,
-	EncoderPNG,
-	EncoderGIF,
-	EncoderTIFF
-};
-
-static WCHAR *mimeType[] = {
-	TEXT("image/jpeg"),
-	TEXT("image/bmp"),
-	TEXT("image/png"),
-	TEXT("image/gif"),
-	TEXT("image/tiff")
-};
-
-static PixelFormat pixelType[] = {
-	PixelFormat24bppRGB,
-	PixelFormat24bppRGB,
-	PixelFormat32bppARGB,
-	PixelFormat32bppARGB /*PixelFormat8bppIndexed*/,
-	PixelFormat32bppARGB
-};
-
-//void CreateIndexedImage(DWORD *src, BYTE *dest, unsigned count, ColorPalette *palette) {
-//	for (unsigned i = 0; i < count; i++)
-//		dest[i] = i < count / 2 ? 0 : 1;
-//	palette->Count = 2;
-//	palette->Entries[0] = 0x00ffff00;
-//	palette->Entries[1] = 0xff0000ff;
-//}
-
-int CFotografixDoc::SaveImage_Default(int type, LPCTSTR path, const FGXImage &image) {
-	CLSID clsid;
-	if (GetEncoderClsid(mimeType[type], &clsid) == -1)
-		return Status::GenericError;
-
-	EncoderParameters params = { 0 };
-	UINT quality;
-
-	if (type == EncoderJPEG) {
-		CJPEGDialog dialog;
-
-		if (dialog.DoModal() == IDCANCEL)
-			return Status::Aborted;
-
-		quality = dialog.quality;
-
-		params.Count = 1;
-		params.Parameter[0].Guid = Gdiplus::EncoderQuality;
-		params.Parameter[0].Type = Gdiplus::EncoderParameterValueTypeLong;
-		params.Parameter[0].NumberOfValues = 1;
-		params.Parameter[0].Value = &quality;
-	}
-
-	int w = image.GetWidth(),
-		h = image.GetHeight();
-
-	bool transparent = (type == EncoderPNG || type == EncoderGIF || type == EncoderTIFF);
-
-	FGXLayer layer(CRect(0, 0, w, h));
-	if (transparent == false) layer.Fill(FGXColor(globals.bgColor.GetColor(), 255));
-	image.Render(layer, CRect(0, 0, w, h), transparent);
-
-	DWORD *p = new DWORD[w * h];
-	layer.SaveToMemory(p, 4);
-
-	//BYTE *pp = NULL;
-	//char palBuffer[sizeof(ColorPalette) + 255 * sizeof(ARGB)];
-	//ColorPalette *palette = reinterpret_cast<ColorPalette *>(palBuffer);
-	//if (type == EncoderGIF) {
-	//	// Create palette based on image
-	//	pp = new BYTE[w * h];
-	//	palette->Flags = Gdiplus::PaletteFlags::PaletteFlagsHasAlpha;
-	//	palette->Count = 256;
-	//	CreateIndexedImage(p, pp, w * h, palette);
-	//}
-
-	Bitmap bitmap(w, h, pixelType[type]);
-
-	BitmapData data;
-	data.Width = w;
-	data.Height = h;
-	//if (type == EncoderGIF) {
-	//	data.Stride = w;
-	//	data.PixelFormat = PixelFormat8bppIndexed;
-	//	data.Scan0 = pp;
-	//} else {
-		data.Stride = w * 4;
-		data.PixelFormat = PixelFormat32bppARGB;
-		data.Scan0 = p;
-	//}
-	data.Reserved = NULL;
-
-	Rect rect(0, 0, w, h);
-
-	bitmap.LockBits(&rect, ImageLockMode::ImageLockModeWrite | ImageLockMode::ImageLockModeUserInputBuf, /*(type == EncoderGIF ? PixelFormat8bppIndexed : PixelFormat32bppARGB)*/ PixelFormat32bppARGB, &data);
-	bitmap.UnlockBits(&data);
-
-	//if (pp != NULL) {
-	//	bitmap.SetPalette(palette);
-	//	delete pp;
-	//}
-	delete p;
-
-	int res;
-	switch (image.GetUnit()) {
-	case 0:
-		res = 72;
-		break;
-
-	case 1:
-		res = image.GetResolution();
-		break;
-
-	case 2:
-		res = image.GetResolution() / 2.54f;
-		break;
-	}
-	bitmap.SetResolution(res, res);
-
-	return params.Count > 0 ? bitmap.Save(path, &clsid, &params) : bitmap.Save(path, &clsid);
-}
-
 BOOL CFotografixDoc::OnSaveDocument(LPCTSTR lpszPathName)
 {
-	LPCTSTR temp = _tcsrchr(lpszPathName, '.');
-	CString ext;
+    image.Compact();
 
-	if (temp != NULL) {
-		ext = temp + 1;
-		ext.MakeLower();
-	}
+    if (SaveImage_FGX(lpszPathName, image)) {
+        SetModifiedFlag(false);
+        return true;
+    }
 
-	int status = Status::Ok;
-
-	if (ext == TEXT("jpg") || ext == TEXT("jpeg") || ext == TEXT("jpe") || ext == TEXT("jfif"))
-		status = SaveImage_Default(EncoderJPEG, lpszPathName, image);
-	else if (ext == TEXT("bmp"))
-		status = SaveImage_Default(EncoderBMP, lpszPathName, image);
-	else if (ext == TEXT("png"))
-		status = SaveImage_Default(EncoderPNG, lpszPathName, image);
-	else if (ext == TEXT("gif"))
-		status = SaveImage_Default(EncoderGIF, lpszPathName, image);
-	else if (ext == TEXT("tif") || ext == TEXT("tiff"))
-		status = SaveImage_Default(EncoderTIFF, lpszPathName, image);
-	else if (ext == TEXT("fgx"))
-		status = SaveImage_FGX(lpszPathName, image);
-	else if (ext == TEXT("tga"))
-		status = SaveImage_TGA(lpszPathName, image);
-
-	switch (status) {
-	case Status::Ok:
-		return true;
-
-	case Status::AccessDenied:
-		AfxGetMainWnd()->MessageBox(LangMessageParam(ErrorFileWrite, lpszPathName), NULL, MB_ICONSTOP | MB_OK);
-		return false;
-
-	default:
-		return false;
-	}
+    HandleSaveError(IDS_FILE_SAVE, lpszPathName, ExportResult::Win32Error);
+    return false;
 }
 
 // CFotografixDoc diagnostics
@@ -1921,42 +1735,6 @@ int CFotografixDoc::LoadImage_ICO(LPCTSTR path, FGXImage &image) {
 	return Status::UnknownImageFormat;
 }
 
-int CFotografixDoc::SaveImage_TGA(LPCTSTR path, const FGXImage &image) {
-	static const char id[] = "Saved by Fotografix";
-
-	CFile file;
-	if (file.Open(path, CFile::modeCreate | CFile::modeWrite) == false)
-		return Status::AccessDenied;
-
-	// Prepare header
-	TgaHeader header;
-	ZeroMemory(&header, sizeof(header));
-	header.IDLength = sizeof(id);
-	header.ImageType = 2;
-	header.Width = image.GetWidth();
-	header.Height = image.GetHeight();
-	header.PixelDepth = 32;
-	header.ImageDescriptor = 0x28;
-
-	file.Write(&header, sizeof(header));
-	file.Write(id, sizeof(id));
-
-	// Write pixel data
-
-	FGXLayer layer(CRect(0, 0, header.Width, header.Height));
-	image.Render(layer, CRect(0, 0, header.Width, header.Height), true);
-
-	int n = header.Width * header.Height;
-	DWORD *p = new DWORD[n];
-	layer.SaveToMemory(p, 4);
-	file.Write(p, n*4);
-	delete p;
-
-	file.Close();
-
-	return Status::Ok;
-}
-
 #pragma pack(push, 1)
 
 struct FGXBlockHeader {
@@ -2121,10 +1899,14 @@ void CFotografixDoc::FGX_WriteBlockHeader(CFile &file, LONG Signature, LONG Bloc
 	file.Write(&header, sizeof(header));
 }
 
-int CFotografixDoc::SaveImage_FGX(LPCTSTR path, const FGXImage &image) {
+bool CFotografixDoc::SaveImage_FGX(LPCTSTR path, const FGXImage &image) {
 	CFile file;
-	if (file.Open(path, CFile::modeCreate | CFile::modeWrite) == false)
-		return Status::AccessDenied;
+
+    CFileException ex;
+    if (file.Open(path, CFile::modeCreate | CFile::modeWrite, &ex) == false) {
+        SetLastError(ex.m_lOsError);
+        return false;
+    }
 
 	// Write image header
 	FGXHeader header;
@@ -2191,35 +1973,61 @@ int CFotografixDoc::SaveImage_FGX(LPCTSTR path, const FGXImage &image) {
 	}
 
 	file.Close();
-	return Status::Ok;
+    return true;
 }
 
 BOOL CFotografixDoc::SaveModified()
 {
-	if (IsModified()) {
-		switch (AfxGetMainWnd()->MessageBox(LangMessageParam(AskFileSave, GetTitle()), NULL, MB_ICONWARNING | MB_YESNOCANCEL)) {
-		case IDYES:
-			{
-				POSITION pos = GetFirstViewPosition();
-				static_cast<CFotografixView *>(GetNextView(pos))->OnFileSave();
-			}
-			if (IsModified() == true) return false;
-			break;
+    if (!IsModified()) {
+        return true;
+    }
 
-		case IDNO:
-			return true;
+    CString content;
 
-		case IDCANCEL:
-			return false;
-		}
-	}
+    CString mainInstruction;
+    mainInstruction.FormatMessage(IDS_SAVE_CONFIRMATION, GetTitle());
 
-	if (dirty == true && (image.GetLayerCount() > 1 || image.GetLayer(0)->GetOpacity() < 255 || image.GetLayer(0)->HasMask()) &&
-		GetPathName().Right(4).MakeLower() != TEXT(".fgx") &&
-		AfxGetMainWnd()->MessageBox(LangMessage(WarnNoLayers), NULL, MB_ICONWARNING | MB_OKCANCEL) == IDCANCEL)
+    CString title;
+    title.LoadString(AFX_IDS_APP_TITLE);
+
+    int result = CTaskDialog::ShowDialog(content, mainInstruction, title, IDS_SAVE, IDS_DONT_SAVE, TDCBF_CANCEL_BUTTON, 0);
+
+	switch (result) {
+	case IDS_SAVE:
+        OnFileSave();
+        return !IsModified();
+
+	case IDS_DONT_SAVE:
+		return true;
+
+    default:
 		return false;
+	}
+}
 
-	return true;
+void CFotografixDoc::OnFileSave()
+{
+    CString fileName = GetPathName();
+
+    if (fileName.IsEmpty() || fileName.Right(4) != L".fgx") {
+        OnFileSaveAs();
+    } else {
+        OnSaveDocument(fileName);
+    }
+}
+
+
+void CFotografixDoc::OnFileSaveAs()
+{
+    CFileDialog dlg{ false, L".fgx", nullptr, OFN_OVERWRITEPROMPT, L"Fotografix (*.fgx)|*.fgx||" };
+
+    if (dlg.DoModal() == IDOK) {
+        CString fileName = dlg.GetPathName();
+
+        if (OnSaveDocument(fileName)) {
+            SetPathName(fileName);
+        }
+    }
 }
 
 void CFotografixDoc::OnFileExport()
@@ -2235,15 +2043,15 @@ void CFotografixDoc::OnFileExport()
         ExportResult result = fgx::ExportImage(image, fileName, dlg.GetExportFormat(), options);
 
         if (result != ExportResult::Success) {
-            HandleExportError(fileName, result);
+            HandleSaveError(IDS_FILE_EXPORT, fileName, result);
         }
     }
 }
 
-void HandleExportError(const std::wstring& fileName, fgx::ExportResult exportResult)
+void HandleSaveError(int titleMessageId, const std::wstring& fileName, fgx::ExportResult exportResult)
 {
     CString title;
-    title.LoadString(IDS_FILE_EXPORT);
+    title.LoadString(titleMessageId);
 
     CString mainInstruction;
     mainInstruction.FormatMessage(IDS_SAVE_ERROR, fileName.c_str());

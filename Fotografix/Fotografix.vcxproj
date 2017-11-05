@@ -328,7 +328,6 @@
     <ClCompile Include="FotografixView.cpp" />
     <ClCompile Include="GdiplusEncoderList.cpp" />
     <ClCompile Include="InputDialog.cpp" />
-    <ClCompile Include="JPEGDialog.cpp" />
     <ClCompile Include="Language.cpp" />
     <ClCompile Include="LayerDialog.cpp" />
     <ClCompile Include="MainFrm.cpp" />
@@ -369,7 +368,6 @@
     <ClInclude Include="FotografixView.h" />
     <ClInclude Include="GdiplusEncoderList.h" />
     <ClInclude Include="InputDialog.h" />
-    <ClInclude Include="JPEGDialog.h" />
     <ClInclude Include="Language.h" />
     <ClInclude Include="LayerDialog.h" />
     <ClInclude Include="MainFrm.h" />

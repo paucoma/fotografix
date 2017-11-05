@@ -109,8 +109,6 @@ BEGIN_MESSAGE_MAP(CFotografixView, CScrollView)
 	ON_UPDATE_COMMAND_UI(ID_LAYER_ENABLELAYERMASK, &CFotografixView::OnUpdateLayerEnablelayermask)
 	ON_COMMAND(ID_EDIT_FILL, &CFotografixView::OnEditFill)
 	ON_COMMAND(ID_IMAGE_IMAGESIZE, &CFotografixView::OnImageImagesize)
-	ON_COMMAND(ID_FILE_SAVE, &CFotografixView::OnFileSave)
-	ON_COMMAND(ID_FILE_SAVE_AS, &CFotografixView::OnFileSaveAs)
 	ON_COMMAND(ID_FLIP_HORIZONTAL, &CFotografixView::OnFlipHorizontal)
 	ON_COMMAND(ID_FLIP_VERTICAL, &CFotografixView::OnFlipVertical)
 	ON_COMMAND(ID_LAYER_MOVEUP, &CFotografixView::OnLayerMoveup)
@@ -1923,66 +1921,6 @@ void CFotografixView::OnImageImagesize()
 
 		pDoc->Redraw(true);
 		pDoc->SetModifiedFlag(true);
-	}
-}
-
-void CFotografixView::OnFileSave()
-{
-	if (pDoc->hasPath == false)
-		OnFileSaveAs();
-	else {
-		if (pDoc->IsModified()) pDoc->dirty = true;
-		pDoc->image.Compact();
-		pDoc->DoSave(pDoc->GetPathName());
-		pDoc->SetModifiedFlag(false);
-	}
-}
-
-void CFotografixView::OnFileSaveAs()
-{
-	LPCTSTR filter = TEXT("\
-Fotografix (*.fgx)|*.fgx|\
-JPEG (*.jpg)|*.jpg|\
-Bitmap (*.bmp)|*.bmp|\
-PNG (*.png)|*.png|\
-GIF (*.gif)|*.gif|\
-TIFF (*.tif)|*.tif|\
-Targa (*.tga)|*.tga||\
-");
-
-	LPCTSTR ext[] = {
-		TEXT(".fgx"),
-		TEXT(".jpg"),
-		TEXT(".bmp"),
-		TEXT(".png"),
-		TEXT(".gif"),
-		TEXT(".tif"),
-		TEXT(".tga")
-	};
-
-	CFileDialog dlg(false, NULL, NULL, OFN_OVERWRITEPROMPT, filter, this);
-
-#ifndef _DEBUG
-	// Remove MFC hook to enable new Vista dialog
-	dlg.m_ofn.Flags &= ~OFN_ENABLEHOOK;
-#endif
-
-	if (dlg.DoModal() == IDOK) {
-		CString path = dlg.GetPathName();
-
-		LPCTSTR exp = ext[dlg.m_ofn.nFilterIndex - 1];
-		if (path.Right(4).MakeLower() != exp) path += exp;
-
-		if (pDoc->IsModified())
-			pDoc->dirty = true;
-
-		pDoc->image.Compact();
-
-		if (pDoc->DoSave(path) == true) {
-			pDoc->SetPathName(path);
-			pDoc->hasPath = true;
-			pDoc->SetModifiedFlag(false);
-		}
 	}
 }
 

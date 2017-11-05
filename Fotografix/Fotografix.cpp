@@ -215,7 +215,9 @@ void CFotografixApp::OnAppAbout()
 
 void CFotografixApp::OnFileOpen()
 {
-	LPCTSTR filter = TEXT("\
+    LPCTSTR filter = L"\
+All files|*.*|\
+All images|*.fgx;*.psd;*.xcf;*.jpg;*.jpeg;*.jpe;*.jfif;*.bmp;*.png;*.gif;*.tif;*.tiff;*.tga;*.pcx;*.ico;*.cur|\
 Fotografix (*.fgx)|*.fgx|\
 JPEG (*.jpg;*.jpeg;*.jpe;*.jfif)|*.jpg;*.jpeg;*.jpe;*.jfif|\
 Bitmap (*.bmp)|*.bmp|\
@@ -226,32 +228,22 @@ Photoshop (*.psd)|*.psd|\
 GIMP (*.xcf)|*.xcf|\
 Targa (*.tga;*.vda;*.icb;*.vst)|*.tga;*.vda;*.icb;*.vst|\
 PCX (*.pcx)|*.pcx|\
-Icons (*.ico;*.cur)|*.ico;*.cur|\
-All Supported Formats|*.fgx;*.psd;*.xcf;*.jpg;*.jpeg;*.jpe;*.jfif;*.bmp;*.png;*.gif;*.tif;*.tiff;*.tga;*.pcx;*.ico;*.cur|\
-All Files (*.*)|*.*||\
-");
+Icons (*.ico;*.cur)|*.ico;*.cur||\
+";
 
-	CFileDialog dlg(true, TEXT(".fgx"), NULL, OFN_ALLOWMULTISELECT | OFN_FILEMUSTEXIST, filter, GetMainWnd());
+    CFileDialog dlg{ true, nullptr, nullptr, OFN_ALLOWMULTISELECT | OFN_FILEMUSTEXIST | OFN_HIDEREADONLY, filter };
+	dlg.m_ofn.nFilterIndex = 2;
 
-#ifndef _DEBUG
-	// Remove MFC hook to enable new Vista dialog
-	dlg.m_ofn.Flags &= ~OFN_ENABLEHOOK;
-#endif
-
-	dlg.m_ofn.nFilterIndex = 13;
-
-	TCHAR buffer[4096];
+	wchar_t buffer[4096];
 	buffer[0] = 0;
 	dlg.m_ofn.lpstrFile = buffer;
 	dlg.m_ofn.nMaxFile = 4096;
 
 	if (dlg.DoModal() == IDOK) {
-		bool readOnly = dlg.GetReadOnlyPref();
-
 		POSITION pos = dlg.GetStartPosition();
+
 		while (pos) {
-			CFotografixDoc *pDoc = static_cast<CFotografixDoc *>(OpenDocumentFile(dlg.GetNextPathName(pos)));
-			if (readOnly == true) pDoc->hasPath = false;
+            OpenDocumentFile(dlg.GetNextPathName(pos));
 		}
 	}
 }

@@ -66,9 +66,6 @@
     <ClCompile Include="InputDialog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="JPEGDialog.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Language.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -162,9 +159,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="InputDialog.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="JPEGDialog.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Language.h">

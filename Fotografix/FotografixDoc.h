@@ -82,8 +82,6 @@ public:
 	static int LoadImage_Icon(HICON hIcon, FGXImage &image);
 	static int LoadImage_Default(LPCTSTR path, FGXImage &image);
 
-	static int SaveImage_Default(int type, LPCTSTR path, const FGXImage &image);
-
 	static void PSD_ReadChannelData(CFile &file, FGXChannel &channel);
 	static void PSD_ReadChannelDataRLE(CFile &file, FGXChannel &channel);
 	static CString PSD_ReadString(CFile &file);
@@ -101,11 +99,9 @@ public:
 	static int LoadImage_TGA(LPCTSTR path, FGXImage &image);
 	static int LoadImage_ICO(LPCTSTR path, FGXImage &image);
 
-	static int SaveImage_TGA(LPCTSTR path, const FGXImage &image);
-
 	static int LoadImage_FGX(LPCTSTR path, FGXImage &image);
 	static void FGX_WriteBlockHeader(CFile &file, LONG Signature, LONG BlockSize);
-	static int SaveImage_FGX(LPCTSTR path, const FGXImage &image);
+	static bool SaveImage_FGX(LPCTSTR path, const FGXImage &image);
 
 	// Overrides
 public:
@@ -216,12 +212,11 @@ public:
 	bool tActive;
 	CTransformTracker tTracker;
 
-	bool hasPath;
-	bool dirty;
-
 private:
 	vector<FGXUndo *> undo;
 	int undoPos;
 public:
+    afx_msg void OnFileSave();
+    afx_msg void OnFileSaveAs();
     afx_msg void OnFileExport();
 };

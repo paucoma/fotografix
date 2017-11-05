@@ -730,19 +730,6 @@ BEGIN
     CTEXT           "Scripts",IDC_HEADER1,2,7,137,10,SS_CENTERIMAGE
 END
 
-IDD_JPEG_OPTIONS DIALOGEX 0, 0, 187, 56
-STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "JPEG Options"
-FONT 9, "MS Shell Dlg", 400, 0, 0x0
-BEGIN
-    LTEXT           "Quality",IDC_STATIC,11,8,30,8
-    EDITTEXT        IDC_EDIT1,91,7,30,12,ES_AUTOHSCROLL | ES_NUMBER
-    CONTROL         "",IDC_SLIDER1,"msctls_trackbar32",TBS_AUTOTICKS | WS_TABSTOP,7,20,120,18
-    LTEXT           "QualitySlider",IDC_STATIC,11,40,169,8
-    DEFPUSHBUTTON   "Save",IDOK,130,7,50,14
-    PUSHBUTTON      "Cancel",IDCANCEL,130,24,50,14
-END
-
 IDD_RULER DIALOGEX 0, 0, 115, 91
 STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
 EXSTYLE WS_EX_TOOLWINDOW
@@ -920,14 +907,6 @@ BEGIN
         BOTTOMMARGIN, 118
     END
 
-    IDD_JPEG_OPTIONS, DIALOG
-    BEGIN
-        LEFTMARGIN, 7
-        RIGHTMARGIN, 180
-        TOPMARGIN, 7
-        BOTTOMMARGIN, 49
-    END
-
     IDD_RULER, DIALOG
     BEGIN
         LEFTMARGIN, 7
@@ -1072,12 +1051,16 @@ BEGIN
     ID_INDICATOR_SIZE       "ZZ9999 x 9999 pixels (9999 ppi)"
     ID_INDICATOR_LAYER      "ZZ1234567890123456 (Green-Green)"
     IDS_FILE_EXPORT         "Export"
-    IDS_SAVE_ERROR          "Can't save ""%1"""
+    IDS_SAVE_ERROR          "Can't save %1"
     IDS_UNSUPPORTED_FORMAT  "The selected image format is not supported on this system."
     IDS_EXPORT_QUALITY_LABEL "Quality:"
     IDS_EXPORT_QUALITY_LOW  "Low"
     IDS_EXPORT_QUALITY_MEDIUM "Medium"
     IDS_EXPORT_QUALITY_HIGH "High"
+    IDS_FILE_SAVE           "Save"
+    IDS_SAVE_CONFIRMATION   "Do you want to save changes to %1?"
+    IDS_SAVE                "&Save"
+    IDS_DONT_SAVE           "Do&n't Save"
 END
 
 STRINGTABLE
